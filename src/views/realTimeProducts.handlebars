@@ -1,0 +1,59 @@
+<div>
+    <h1>Ingrese los datos del Producto</h1>
+    <form action="">
+        <input type="text" name="nombre" id="nombre" placeholder="Nombre del producto">
+        <input type="text" name="descripcion" id="descripcion" placeholder="Descripción del producto">
+        <input type="number" name="precio" id="precio" placeholder="Precio del producto">
+
+    </form>
+        <button  onclick="sendMessage()">Agregar Producto</button>
+</div>
+
+<div>
+    <h1>Productos Disponibles</h1>
+    {{#each products}}
+    <h2>{{this.title}}</h2>
+    <p>{{this.description}}</p>
+    <p>${{this.price}}</p>
+    {{/each}}
+    <h2 id="nombreRecibido"></h2>
+    <p id="descripcionRecibida"></p>
+    <p id="precioRecibido"></p>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../public/js/socketjs.js"></script>
+<script>
+    console.log("Hola mundo")
+    const socketClient = io()
+
+    const nombreProducto = document.getElementById("nombre")
+    const descripcionProducto = document.getElementById("descripcion")
+    const precioProducto = document.getElementById("precio")
+    const nombreRecibido = document.getElementById("nombreRecibido")
+    const descripcionRecibida = document.getElementById("descripcionRecibida")
+    const precioRecibido = document.getElementById("precioRecibido")
+
+
+    socketClient.on("confirmation", data => {
+        console.log(data)
+    }) // Aca el Cliente ESCUCHA. 
+
+    socketClient.on("message_added", data => {
+        nombreRecibido.innerHTML += `${data.title} <br/>`
+        descripcionRecibida.innerHTML += `${data.description} <br/>`
+        precioRecibido.innerHTML += `$${data.price} <br/>`
+    })
+
+    const sendMessage = () => {
+        let productoObj = {
+            title: nombreProducto.value,
+            description: descripcionProducto.value,
+            price: precioProducto.value
+        }
+        
+        if (productoObj.title !== "" && productoObj.description !== "" && productoObj.price.value !== "" ){
+            socketClient.emit("new_message", productoObj)
+        }
+    } //Aca el Cliente emite mensaje
+</script>
