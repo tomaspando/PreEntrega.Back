@@ -6,7 +6,12 @@ const product = new ProductManager
 
 
 productRouter.get("/", async (req,res) => {
-    res.send(await product.getProducts())
+    let limit = parseInt(req.query.limit)
+    if(!limit) return res.send(await product.getProducts())
+    let allProducts = await product.getProducts()
+    let productLimit = allProducts.slice(0,limit)
+    res.send(productLimit)
+    
 })
 
 productRouter.get("/:id", async (req,res) => {
@@ -19,7 +24,7 @@ productRouter.post("/", async (req, res) => {
     res.send(await product.addProducts(newProduct) )
 } )
 
-productRouter.put(":id", async (req,res) => {
+productRouter.put("/:id", async (req,res) => {
     let id = req.params.id
     let updateProduct = req.body 
     res.send(await product.updateProducts(id, updateProduct))

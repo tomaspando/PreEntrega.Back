@@ -3,7 +3,7 @@ import handlebars from "express-handlebars"
 import {Server} from "socket.io"
 
 import productRouter from "./router/product.routes.js"
-import cartsRouter from "./router/carts.routes.js"
+import cartRouter from "./router/carts.routes.js"
 import viewsRouter from "./router/views.routes.js"
 import { __dirname } from "./utils.js"
 
@@ -34,7 +34,7 @@ app.set("views", `${__dirname}/views`)
 app.set("view engine", "handlebars")
 
 app.use("/api/products", productRouter)
-app.use("/api/cart", cartsRouter)
+app.use("/api/cart", cartRouter)
 app.use("/", viewsRouter)
 
 app.use("/static", express.static(`${__dirname}/public`))
