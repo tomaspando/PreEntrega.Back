@@ -1,5 +1,5 @@
 import { Router } from "express";
-import ProductManager from "../controllers/ProductManager.js"
+import ProductManager from "../dao/ProductManager.js"
 
 const viewsRouter = Router()
 const product = new ProductManager
@@ -19,6 +19,12 @@ viewsRouter.get("/realtimeproducts", async (req,res) => {
     res.render("realTimeProducts", {
         title: "Prueba",
         products: allProducts
+    })
+})
+
+viewsRouter.get("/messages", async (req, res) => {
+    res.render("chat" , {
+        
     })
 })
 
