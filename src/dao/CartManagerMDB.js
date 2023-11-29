@@ -50,45 +50,50 @@ class CartManager {
 
     addProductInCart = async (cartId, productId) => {
         try {
-            const cartById = await cartModel.findById(id)
-            if(!cartById) return "El carrito no existe"
-            const productById = await allProducts.findById(id)
-            if(!productById) return "El producto no existe"
-            let allCarts = await this.getCarts()
-            let cartFilter = allCarts.filter(cart => cart.id !== cartId)
-
-            if(cartById.product.some(prod => prod.id === productId)) {
-                let productInCart = cartById.product.find(prod => prod.id === productId)
-                productInCart.cantidad++
-                let cartsConcat = [productInCart, ...cartFilter]
-                //Aca ya no se que hacer
-            }
-
-        } catch (error) {
             
+            const cart = await cartModel.findById(cartId)
+
+            if(!cart) {
+                return "El carrito no existe"
+            }
+            
+            const product = await allProducts.findById(productId)
+            
+            if(!product) {
+                return "El producto no existe"
+            }
+            
+            //Verificar si el producto ya está en el carrito
+            
+            const existProduct = cart.product.find( prod => prod.id === productId)
+            
+            if(existProduct) {
+                
+                //Si el producto ya está en el carrtio, incrementa la cantidad
+                existProduct.cantidad++
+
+                //Guarda los cambios en el carrito
+                await cart.save()
+
+                return "Producto sumado al carrito"
+            } else {
+
+                //Si el producto no está en el carrito, agregalo con cantidad 1
+                cart.product.push({id: product.id, cantidad: 1})
+
+                //Guarda los cambios en el carrito
+                await cart.save()
+
+                return "Producto agregado al carrito"
+            }
+            
+            
+        } catch (error) {
+            console.log("Error al agregar al carrito", error)
+
+            return "Ocurrio un error al agregar producto al carrito"
         }
-        /* let cartById = await this.exist(cartId)
-        if(!cartById) return "El carrito no existe"
-        let productById = await allProducts.exist(productId)
-        if(!productById) return "El producto no existe"
-        let allCarts = await this.readCarts()
-        let cartFilter = allCarts.filter(cart => cart.id !== cartId)
         
-        if(cartById.products.some(prod => prod.id === productId)){
-            let addProductInCart = cartById.products.find(prod => prod.id === productId)
-            addProductInCart.cantidad++
-            let cartsConcat = [productInCart,...cartFilter]
-            await this.writeCarts(cartsConcat)
-
-            return "Producto Sumado al Carrito"
-        }
-
-        cartById.products.push({id: productById.id, cantidad: 1})
-
-
-        let cartsConcat = [cartById, ...cartFilter]
-        await this.writeCarts(cartsConcat)
-        return "Producto agregado al carrito" */
     }
 }
 

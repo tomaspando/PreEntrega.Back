@@ -33,7 +33,15 @@ try {
     const httpServer = app.listen(PORT, () => {
         console.log("Servidor activo y conectado a BBDD")
     })
-    const socketServer = new Server(httpServer)
+
+    const chat_messages = []
+    const socketServer = new Server(httpServer, {
+        cors: {
+            origin:"*",
+            methods: ["PUT","GET","POST","DELETE","OPTIONS"],
+            credentials: false
+        }
+    })
     socketServer.on("connection", socket => {
         console.log(socket.id)
 
@@ -44,6 +52,12 @@ try {
 
         socket.on("new_message", data => {
         socketServer.emit("message_added", data)
+        })
+
+        socket.on("message", data => {
+            socket.on("message", data => {
+                
+            })
         })
     })
     /* app.listen(PORT, () => {

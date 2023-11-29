@@ -1,1 +1,10 @@
-<h1>Listado de productos</h1>
+<div>
+    <h1>Chat</h1>
+
+    <input type="text" name="message" id="message" placeholder="Mensaje" style="width: 260px">
+    <button onclick="sendMessage()">Enviar</button>
+    <p id="received_messages"></p>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../static/js/index.js"></script>

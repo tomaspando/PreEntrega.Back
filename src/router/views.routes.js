@@ -24,8 +24,10 @@ viewsRouter.get("/realtimeproducts", async (req,res) => {
 
 viewsRouter.get("/messages", async (req, res) => {
     res.render("chat" , {
-        
+        title: "Chat"
     })
 })
+
+
 
 export default viewsRouter
