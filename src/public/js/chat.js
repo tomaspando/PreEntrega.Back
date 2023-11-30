@@ -14,6 +14,7 @@ socket.on("messageLogs", data => {
 const sendMessage = () => {
     if(message.value.trim() !== "") {
         socket.emit("message", {user: user, message: message.value.trim()})
+        message.value = ""
     }
 }
 

@@ -7,6 +7,7 @@ import productRouter from "./router/product.routes.js"
 import cartRouter from "./router/carts.routes.js"
 import viewsRouter from "./router/views.routes.js"
 import { __dirname } from "./utils.js"
+import chatModel from "./dao/models/messages.model.js"
 
 const app = express()
 const PORT = 8080
@@ -45,13 +46,10 @@ try {
     socketServer.on("connection", socket => {
         console.log(socket.id)
 
-        socket.on("message", data => {
-            console.log(data)
-            socket.emit("confirmation", "Esta es la confirmación")
-        }) //Aca el SERVIDOR escucha y luego con el Emit, emite. 
-
-        socket.on("new_message", data => {
-        socketServer.emit("message_added", data)
+        socket.on("new_message", async data => {
+            const message = new chatModel(data)
+            await message.save()
+            socketServer.emit("new_message", data)
         })
 
         socket.on("message", data => {
