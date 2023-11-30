@@ -10,7 +10,7 @@ import { __dirname } from "./utils.js"
 
 const app = express()
 const PORT = 8080
-const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.net/?retryWrites=true&w=majority"
+const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.net/ecommerce"
 
 
 
@@ -56,7 +56,8 @@ try {
 
         socket.on("message", data => {
             socket.on("message", data => {
-                
+                chat_messages.push(data)
+                socketServer.emit("messageLogs", chat_messages)
             })
         })
     })
