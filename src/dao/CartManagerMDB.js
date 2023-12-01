@@ -7,20 +7,6 @@ class CartManager {
     constructor () {
     }
 
-   /*  readCarts = async () => {
-        let carts = await fs.readFile(this.path, "utf-8")
-        return JSON.parse(carts)
-    }
-
-    writeCarts = async (cart) => {
-        await fs.writeFile(this.path, JSON.stringify(cart))
-    }
-
-    exist = async id => {
-        let carts = await this.readCarts()
-        return carts.find(cart => cart.id === id)
-    } */
-
     addCart = async () => {
         try {
             await cartModel.create()

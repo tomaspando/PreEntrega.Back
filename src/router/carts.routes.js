@@ -9,7 +9,7 @@ cartRouter.post("/", async (req,res) => {
 } )
 
 cartRouter.get("/", async (req,res) => {
-    res.send(await carts.readCarts())
+    res.send(await carts.getCarts())
 })
 
 cartRouter.get ("/:cid", async (req,res) => {
