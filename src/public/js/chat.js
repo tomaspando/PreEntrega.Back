@@ -2,6 +2,7 @@ const message = document.getElementById("message")
 const received_messages = document.getElementById("received_messages")
 const socket = io() // Cliente de Socket.io
 
+
 socket.on("messageLogs", data => {
     let messages = ""
     data.forEach(message => {

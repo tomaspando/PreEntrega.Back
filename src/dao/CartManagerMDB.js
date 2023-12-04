@@ -1,5 +1,6 @@
 import ProductManager from "./ProductManagerMDB.js"
 import cartModel from "./models/carts.model.js"
+import productModel from "./models/product.model.js"
 
 const allProducts = new ProductManager
 
@@ -7,9 +8,9 @@ class CartManager {
     constructor () {
     }
 
-    addCart = async () => {
+    addCart = async (cartObj) => {
         try {
-            await cartModel.create()
+            await cartModel.create({products: [], total:0})
             return "Carrito agregado"
         } catch (error) {
             return error.message
@@ -18,7 +19,8 @@ class CartManager {
 
     getCarts = async () => {
         try {
-            const carts = await cartModel.find().lean()
+            //const carts = await cartModel.find().lean() 
+            const carts = await cartModel.find().populate({path: "products", model: productModel}).lean()
             return carts
         } catch (error) {
             error.message

@@ -5,7 +5,7 @@ mongoose.pluralize(null)
 const collection = 'products' //La coleccion se llama products. Es coleccion tiene este esquema: 
 
 const schema = new mongoose.Schema({
-    title: { type: String, required: true /* index: true */ },
+    title: { type: String, required: true, index: true },
     description: { type: String, required: false },
     price: { type: Number, required: true },
     thumbnail: { type: String, required: false },

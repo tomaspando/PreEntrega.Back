@@ -24,7 +24,7 @@ app.set("views", `${__dirname}/views`)
 app.set("view engine", "handlebars")
 
 app.use("/api/products", productRouter)
-app.use("/api/cart", cartRouter)
+app.use("/api/carts", cartRouter)
 app.use("/", viewsRouter)
 
 app.use("/static", express.static(`${__dirname}/public`))

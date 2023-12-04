@@ -29,7 +29,7 @@ class ProductManager {
 
     getProducts = async () => {
         try {
-            const products = await productModel.find().lean()
+            const products = await productModel.find({ /* title: `Computadora` */}).lean()
             return products
         } catch (error) {
             return error.message
