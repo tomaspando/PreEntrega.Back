@@ -27,10 +27,24 @@ class ProductManager {
         }
     }
 
-    getProducts = async () => {
+    getProducts = async (limite) => {
         try {
-            const products = await productModel.find({ /* title: `Computadora` */}).lean()
-            return products
+            /* const process = await productModel.aggregate([
+                {$limit : limite},
+                {$sort: {price: 1}}
+            ]) */
+
+/*             return process
+ */            /* const products = await productModel.find({}).lean()
+            return products */
+
+            const process = await productModel.paginate(
+                {title:"Computadora"},
+                {offset: 0, limit: limite, lean: true}
+            )
+
+            return process
+
         } catch (error) {
             return error.message
         }

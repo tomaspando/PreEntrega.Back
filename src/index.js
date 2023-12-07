@@ -30,7 +30,22 @@ app.use("/", viewsRouter)
 app.use("/static", express.static(`${__dirname}/public`))
 
 try {
-    await mongoose.connect(MONGOOSE_URL)
+    await mongoose.connect(MONGOOSE_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });    
+
+    mongoose.connection.on("connected", () => {
+
+        console.log("Conexión a MongoDB establecida con éxito");
+    })
+
+    mongoose.connection.on("disconnected", () => {
+
+        console.log("Conexión a MongoDB desconectada");
+        
+        });
+
     const httpServer = app.listen(PORT, () => {
         console.log("Servidor activo y conectado a BBDD")
     })
@@ -53,11 +68,10 @@ try {
         })
 
         socket.on("message", data => {
-            socket.on("message", data => {
-                chat_messages.push(data)
-                socketServer.emit("messageLogs", chat_messages)
-            })
+            chat_messages.push(data)
+            socketServer.emit("messageLogs", chat_messages)
         })
+        
     })
     /* app.listen(PORT, () => {
         console.log("Backend activo y conectado a BBDD")

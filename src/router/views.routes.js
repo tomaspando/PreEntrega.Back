@@ -6,11 +6,27 @@ const product = new ProductManager
 
 
 viewsRouter.get("/", async (req,res) => {
-    let allProducts = await product.getProducts()
+
+/*     let allProducts = await product.getProducts()
     res.render("home",  {
         title: "Tienda RF",
         products: allProducts
-    })
+    }) */
+
+    let limit = parseInt(req.query.limit)
+
+    if(!limit){
+        res.render("home",  {
+            title: "Tienda RF",
+            products: await product.getProducts(10)
+        })
+    }else {
+        res.render("home",  {
+            title: "Tienda RF",
+            products: await product.getProducts(limit)
+        })
+    }
+
 })
 
 viewsRouter.get("/realtimeproducts", async (req,res) => {

@@ -6,11 +6,29 @@ const product = new ProductManager
 
 
 productRouter.get("/", async (req,res) => {
-    let limit = parseInt(req.query.limit)
+    //Recibir por Query params un limite, una page, un sort y un query
+
+    try {
+        let limit = parseInt(req.query.limit)
+    
+        if(!limit){
+            const products = await product.getProducts(10)
+            res.status(200).send({status: "Succes", payload: products})
+        }else {
+            const products = await product.getProducts(limit)
+            res.status(200).send({status: "Succes", payload: products})
+        }
+        
+    } catch (error) {
+        res.status(500).send({status: "Error", data: error.message})
+    }
+
+
+    /* let limit = parseInt(req.query.limit)
     if(!limit) return res.send(await product.getProducts())
     let allProducts = await product.getProducts()
     let productLimit = allProducts.slice(0,limit)
-    res.send(productLimit)
+    res.send(productLimit) */
     
 })
 
