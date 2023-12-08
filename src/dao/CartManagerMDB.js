@@ -85,15 +85,26 @@ class CartManager {
     }
 
     deleteProductInCart = async (cartId, productId) => {
-        let cart = await this.getCartById(cartId)
-        let product = await allProducts.getProductsById(productId)
+        try {
+            let cart = await this.getCartById(cartId)
+            let product = await allProducts.getProductsById(productId)
+            
+        } catch (error) {
+            return error.message
+        }
 
         //Aca ya no se qué hacer. 
     }
 
-    //updateCart = async (recibe algo) => {
-        //No se cómo sería esta función. 
-    //}
+    updateCart = async (cartId, updatedProducts) => {
+        try {
+            const actualizacion = await cartModel.findByIdAndUpdate(cartId, updatedProducts)
+
+            return actualizacion
+        } catch (error) {
+            return error.message
+        }
+    }
 
     deleteCart = async cartId => {
         try {

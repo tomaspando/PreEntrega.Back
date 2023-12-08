@@ -9,7 +9,7 @@ productRouter.get("/", async (req,res) => {
     //Recibir por Query params un limite, una page, un sort y un query
 
     try {
-        let limit = parseInt(req.query.limit)
+        let limit = parseInt(req.query.limit) || 10
     
         if(!limit){
             const products = await product.getProducts(10)
@@ -33,24 +33,40 @@ productRouter.get("/", async (req,res) => {
 })
 
 productRouter.get("/:id", async (req,res) => {
-    let id = req.params.id
-    res.send(await product.getProductsById(id))
+    try {
+        let id = req.params.id
+        res.status(200).send({status: "Ok", data: await product.getProductsById(id)()})
+    } catch (error) {
+        res.status(500).send({status: "ERROR", data: error.message})
+    }
 })
 
 productRouter.post("/", async (req, res) => {
-    let newProduct = req.body
-    res.send(await product.addProducts(newProduct) )
+    try {
+        let newProduct = req.body
+        res.status(200).send({status: "Ok", data: await product.addProducts(newProduct)()})
+    } catch (error) {
+        res.status(500).send({status: "ERROR", data: error.message})
+    }
 } )
 
 productRouter.put("/:id", async (req,res) => {
-    let id = req.params.id
-    let updateProduct = req.body 
-    res.send(await product.updateProducts(id, updateProduct))
+    try {
+        let id = req.params.id
+        let updateProduct = req.body 
+        res.status(200).send({status: "Ok", data: await product.updateProducts(id, updateProduct)()})
+    } catch (error) {
+        res.status(500).send({status: "ERROR", data: error.message})
+    }
 })
 
 productRouter.delete("/:id", async (req,res) => {
-    let id = req.params.id
-    res.send(await product.deleteProducts(id) )
+    try {
+        let id = req.params.id
+        res.status(200).send({status: "Ok", data: await product.product.deleteProducts(id)()})
+    } catch (error) {
+        res.status(500).send({status: "ERROR", data: error.message})
+    }
 })
 
 export default productRouter
