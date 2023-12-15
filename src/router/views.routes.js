@@ -44,6 +44,26 @@ viewsRouter.get("/messages", async (req, res) => {
     })
 })
 
+viewsRouter.get("/products", async (req,res) => {
+    const data = await product.getProductsPaginated(req.query.page || 1, req.query.limit || 50)
+
+    data.pages = []
+    for (let i = 1; i <= data.totalPages; i++) data.pages.push(i)
+
+    res.render('products', {
+        title: 'Listado de Productos',
+        data: data
+    })
+})
+
+viewsRouter.get("/login", async (req,res) => {
+    res.render("login", {})
+})
+
+viewsRouter.get("/carts/:cid", async (req,res) => {
+
+})
+
 
 
 export default viewsRouter

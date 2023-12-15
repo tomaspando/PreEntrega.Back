@@ -2,10 +2,13 @@ import express from "express"
 import mongoose from "mongoose"
 import handlebars from "express-handlebars"
 import {Server} from "socket.io"
+import session from "express-session"
 
 import productRouter from "./router/product.routes.js"
 import cartRouter from "./router/carts.routes.js"
 import viewsRouter from "./router/views.routes.js"
+import sessionsRouter from "./router/sessions.routes.js"
+
 import { __dirname } from "./utils.js"
 import chatModel from "./dao/models/messages.model.js"
 
@@ -18,6 +21,7 @@ const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(session({secret: "abd123", resave: true, saveUninitialized: true}))
 
 app.engine("handlebars", handlebars.engine())
 app.set("views", `${__dirname}/views`)
@@ -25,6 +29,7 @@ app.set("view engine", "handlebars")
 
 app.use("/api/products", productRouter)
 app.use("/api/carts", cartRouter)
+app.use("/api/sessions", sessionsRouter)
 app.use("/", viewsRouter)
 
 app.use("/static", express.static(`${__dirname}/public`))
@@ -79,4 +84,32 @@ try {
 } catch (error) {
     console.log("No se puede conectar con bbdd", error.message)
 }
+
+process.on('SIGINT', async () => {
+
+    try {
+   
+     // Realizar tareas de limpieza antes de cerrar la aplicación
+   
+     await mongoose.disconnect();
+   
+     console.log('Conexión a MongoDB cerrada correctamente');
+   
+   
+   
+     // Otros códigos de limpieza pueden ir aquí
+   
+   
+   
+     process.exit(0); // Salir del proceso con código de salida 0 (éxito)
+   
+    } catch (error) {
+   
+     console.error('Error al realizar tareas de limpieza:', error);
+   
+     process.exit(1); // Salir del proceso con código de salida 1 (error)
+   
+    }
+   
+});
 

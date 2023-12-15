@@ -59,8 +59,6 @@ class ProductManager {
         }
     }
 
-
-
     updateProducts = async (id, product) => {
         try {
             const actualizacion = await productModel.findByIdAndUpdate(id, product)
@@ -76,6 +74,17 @@ class ProductManager {
             const eliminacion = await productModel.findByIdAndDelete(id)
 
             return eliminacion            
+        } catch (error) {
+            return error.message
+        }
+    }
+
+    getProductsPaginated = async (page, limit) => {
+        try {
+            return await productModel.paginate(
+                {title: "Computadora"},
+                {offset: (page * 50) -50, limit: limit, lean: true}
+            )
         } catch (error) {
             return error.message
         }

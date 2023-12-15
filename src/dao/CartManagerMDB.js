@@ -115,6 +115,35 @@ class CartManager {
             return error.message
         }
     }
+
+    updateProductQuantity = async (cartId, productId, quantity) => {
+        try {
+            const cart = await cartModel.findById(id)
+            //No se qué hacer. 
+        } catch (error) {
+            
+        }
+    
+    }
+
+    deleteProductInCart = async (cartId, productId) => {
+        try {
+            const cart = await cartModel.findById(id)
+            //No se qué hacer. 
+        } catch (error) {
+            
+        }
+    }
+
+    getCartPaginated = async (cartId) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+
+    
 }
 
 export default CartManager
