@@ -3,6 +3,8 @@ import mongoose from "mongoose"
 import handlebars from "express-handlebars"
 import {Server} from "socket.io"
 import session from "express-session"
+import FileStore  from "session-file-store"
+import MongoStore from "connect-mongo"
 
 import productRouter from "./router/product.routes.js"
 import cartRouter from "./router/carts.routes.js"
@@ -21,7 +23,16 @@ const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use(session({secret: "abd123", resave: true, saveUninitialized: true}))
+
+//Instancia para almacenamiento de sesiones en Archivo
+const fileStorage = FileStore(session)
+app.use(session({
+    //store: new fileStorage({path:"./sessions", ttl: 60, retries: 0}),
+    store: MongoStore.create({mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 60, clearInterval: 5000}),//Datos de sesion a MongoDB; TTL: Tiempo de vida de la sesion en segundos.
+    secret: "abd123",
+    resave: false,
+    saveUninitialized: false
+}))
 
 app.engine("handlebars", handlebars.engine())
 app.set("views", `${__dirname}/views`)
@@ -35,10 +46,7 @@ app.use("/", viewsRouter)
 app.use("/static", express.static(`${__dirname}/public`))
 
 try {
-    await mongoose.connect(MONGOOSE_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });    
+    await mongoose.connect(MONGOOSE_URL);    
 
     mongoose.connection.on("connected", () => {
 

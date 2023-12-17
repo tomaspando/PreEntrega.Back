@@ -9,16 +9,11 @@ productRouter.get("/", async (req,res) => {
     //Recibir por Query params un limite, una page, un sort y un query
 
     try {
-        let limit = parseInt(req.query.limit) || 10
-    
-        if(!limit){
-            const products = await product.getProducts(10)
-            res.status(200).send({status: "Succes", payload: products})
-        }else {
-            const products = await product.getProducts(limit)
-            res.status(200).send({status: "Succes", payload: products})
-        }
+        const limit = parseInt(req.query.limit) || 10
         
+        const products = await product.getProducts(limit)
+        res.status(200).send({status: "Succes", payload: products})
+    
     } catch (error) {
         res.status(500).send({status: "Error", data: error.message})
     }

@@ -1,9 +1,7 @@
-Pendientes Segun pre entrega: 
+Pendientes: 
 
 -Vista en 'viewsRouter' para '/products': Debes proporcionar una vista que muestre todos los productos con opciones para ver detalles o agregar al carrito. No logro resolver la paginación. 
 
 -Vista en 'viewsRouter' para '/carts/:cid': Esta vista debe mostrar solo los productos que pertenecen al carrito específico.
 
--Métodos: El metodo Delete para Carts que se corresponde con la ruta api/carts/:cid/products/:pid: debe eliminar del carrito el producto seleccionado. 
-	
-	El metodo PUT para Carts que se corresponde con la ruta api/carts/:cid/products/:pid y que debe actualizar solo la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
+-Vista Register y todo el proceso que eso implica: endpoints/metodos. 

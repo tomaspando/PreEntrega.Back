@@ -53,7 +53,7 @@ class CartManager {
             
             //Verificar si el producto ya está en el carrito
             
-            const existProduct = cart.product.find( prod => prod.id === productId)
+            const existProduct = cart.products.find( prod => prod.id === productId)
             
             if(existProduct) {
                 
@@ -67,7 +67,7 @@ class CartManager {
             } else {
 
                 //Si el producto no está en el carrito, agregalo con cantidad 1
-                cart.product.push({id: product.id, cantidad: 1})
+                cart.products.push({id: product.id, cantidad: 1})
 
                 //Guarda los cambios en el carrito
                 await cart.save()
@@ -86,14 +86,18 @@ class CartManager {
 
     deleteProductInCart = async (cartId, productId) => {
         try {
-            let cart = await this.getCartById(cartId)
-            let product = await allProducts.getProductsById(productId)
+            const cart = await cartModel.findById(cartId)
+
+            const cartFilter =  cart.products.filter(prod => prod._id !== productId)
+
+            await cartModel.findByIdAndUpdate(cartId,cartFilter)
+
+            return "Producto Eliminado"
             
         } catch (error) {
             return error.message
         }
 
-        //Aca ya no se qué hacer. 
     }
 
     updateCart = async (cartId, updatedProducts) => {
@@ -108,9 +112,9 @@ class CartManager {
 
     deleteCart = async cartId => {
         try {
-            const eliminacion = await cartModel.findByIdAndDelete(id)
+            const process = await cartModel.findByIdAndDelete(cartId)
 
-            return eliminacion            
+            return process            
         } catch (error) {
             return error.message
         }
@@ -119,21 +123,20 @@ class CartManager {
     updateProductQuantity = async (cartId, productId, quantity) => {
         try {
             const cart = await cartModel.findById(id)
-            //No se qué hacer. 
+
+            const productInCart = cart.products.filter(prod => prod._id == productId)
+
+            productInCart.cantidad = quantity
+
+            await cartModel.findByIdAndUpdate(cartId, productInCart)
+
+            return "Cantidad actualizada"
         } catch (error) {
-            
+            return error.message
         }
     
     }
 
-    deleteProductInCart = async (cartId, productId) => {
-        try {
-            const cart = await cartModel.findById(id)
-            //No se qué hacer. 
-        } catch (error) {
-            
-        }
-    }
 
     getCartPaginated = async (cartId) => {
         try {

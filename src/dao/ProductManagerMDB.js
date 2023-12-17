@@ -35,15 +35,15 @@ class ProductManager {
             ]) */
 
 /*             return process
- */            /* const products = await productModel.find({}).lean()
-            return products */
+ */            const products = await productModel.find({}).lean()
+            return products 
 
-            const process = await productModel.paginate(
+            /* const process = await productModel.paginate(
                 {title:"Computadora"},
                 {offset: 0, limit: limite, lean: true}
             )
 
-            return process
+            return process */
 
         } catch (error) {
             return error.message
@@ -82,8 +82,8 @@ class ProductManager {
     getProductsPaginated = async (page, limit) => {
         try {
             return await productModel.paginate(
-                {title: "Computadora"},
-                {offset: (page * 50) -50, limit: limit, lean: true}
+                {},
+                {offset: (page * limit) -limit, limit: limit, lean: true}
             )
         } catch (error) {
             return error.message

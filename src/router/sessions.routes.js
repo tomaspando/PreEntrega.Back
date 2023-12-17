@@ -1,4 +1,5 @@
 import {Router} from "express"
+import userModel from "../dao/models/user.model.js"
 
 const router = Router()
 
@@ -32,7 +33,8 @@ router.get("/logout", async (req,res) => {
             if(error) {
                 res.status(500).send({status: "Error", data: error.message})
             } else {
-                res.status(200).send({status: "Ok", data: "Sesion finalizada"})
+                //res.status(200).send({status: "Ok", data: "Sesion finalizada"})
+                res.redirect("/login")
             }
         })
     } catch (error) {
@@ -44,12 +46,22 @@ router.post("/login", async (req, res) => {
     try {
         const {user, pass} = req.body
 
-        if (user === "cperren" && pass === "abc123") {
+        if (user === "cperren" && pass === "abc123")
+        {
             req.session.user = {username: user, admin: true}
-            res.status(200).send({status: "Ok", data: "Sesion iniciada"})
+            //res.status(200).send({status: "Ok", data: "Sesion iniciada"})
+            res.redirect("/profile")
         }
     } catch (error) {
         res.status(401).send({status:"Error", data: "Datos no válidos"})
+    }
+})
+
+router.post("/register", async (req,res) => {
+    try {
+        
+    } catch (error) {
+        
     }
 })
 
