@@ -1,7 +1,10 @@
 import {Router} from "express"
 import userModel from "../dao/models/user.model.js"
+import  UserManager  from "../dao/user.controller.mdb.js"
 
-const router = Router()
+
+const sessionRouter = Router()
+const user = new UserManager
 
 const auth = (req, res, next) => {
     try {
@@ -19,7 +22,7 @@ const auth = (req, res, next) => {
     }
 }
 
-router.get("/", async (req, res) => {
+sessionRouter.get("/", async (req, res) => {
     try {
         
     } catch (error) {
@@ -27,7 +30,7 @@ router.get("/", async (req, res) => {
     }
 })
 
-router.get("/logout", async (req,res) => {
+sessionRouter.get("/logout", async (req,res) => {
     try {
         req.session.destroy((error) => {
             if(error) {
@@ -42,10 +45,10 @@ router.get("/logout", async (req,res) => {
     }
 })
 
-router.post("/login", async (req, res) => {
+sessionRouter.post("/login", async (req, res) => {
     try {
         const {user, pass} = req.body
-
+        
         if (user === "cperren" && pass === "abc123")
         {
             req.session.user = {username: user, admin: true}
@@ -57,12 +60,30 @@ router.post("/login", async (req, res) => {
     }
 })
 
-router.post("/register", async (req,res) => {
+sessionRouter.post("/register", async(req,res) => {
     try {
-        
-    } catch (error) {
-        
-    }
-})
+        const {first_name, last_name, email, password} = req.body 
 
-export default router
+        //Verificamos si el usuario ya existe
+
+        const existingUser = await userModel.findOne({email})
+
+        if(existingUser){
+            return res.status(400).json({error: "El usuario ya existe"})
+        }
+
+        //Crear nuevo usuario
+
+        const newUser = new userModel({first_name, last_name, email, password})
+
+        await newUser.save()
+
+        res.status(201).json({message: "Usuario creado exitosamente"})
+    } catch (error) {
+        console.error("Error al crear usuario", error)
+
+        res.status(500).json({error:"Error interno del servidor"})
+    }
+} )
+
+export default sessionRouter

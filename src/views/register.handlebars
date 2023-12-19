@@ -14,12 +14,22 @@
     <form action="/api/sessions/register" method="post" style="margin-top: 32px;">
         <div class="input-group" style="width: 300px; margin-bottom: 32px;">
             <span class="input-group-text" id="group1"><i class="fa-solid fa-user"></i></span>
-            <input type="text" name="user" class="form-control" placeholder="Nombre" required="required">
+            <input type="text" name="first_name" class="form-control" placeholder="Nombre" required="required">
+        </div>
+
+        <div class="input-group" style="width: 300px; margin-bottom: 32px;">
+            <span class="input-group-text" id="group1"><i class="fa-solid fa-user"></i></span>
+            <input type="text" name="last_name" class="form-control" placeholder="Apellido" required="required">
+        </div>
+
+        <div class="input-group" style="width: 300px; margin-bottom: 32px;">
+            <span class="input-group-text" id="group1"><i class="fa-solid fa-user"></i></span>
+            <input type="email" name="email" class="form-control" placeholder="E-Mail" required="required">
         </div>
 
         <div class="input-group" style="width: 300px; margin-bottom: 32px;">
             <span class="input-group-text" id="group2"><i class="fa-solid fa-lock"></i></span>
-            <input type="password" name="pass" class="form-control" required="required">
+            <input type="password" name="password" class="form-control" required="required">
         </div>
 
         <button type="submit" class="btn btn-success">Registrarse</button>
