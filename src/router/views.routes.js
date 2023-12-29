@@ -108,6 +108,14 @@ viewsRouter.get("/carts/:cid", async (req,res) => {
     })
 })
 
+viewsRouter.get('/restore', async (req, res) => {
+    if (req.session.user) {
+        res.redirect('/profile')
+    } else {
+        res.render('restore', {})
+    }
+})
+
 
 
 export default viewsRouter

@@ -5,6 +5,7 @@ import {Server} from "socket.io"
 import session from "express-session"
 import FileStore  from "session-file-store"
 import MongoStore from "connect-mongo"
+import passport from "passport"
 
 import productRouter from "./router/product.routes.js"
 import cartRouter from "./router/carts.routes.js"
@@ -33,6 +34,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.engine("handlebars", handlebars.engine())
 app.set("views", `${__dirname}/views`)
