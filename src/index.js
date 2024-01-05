@@ -2,6 +2,7 @@ import express from "express"
 import mongoose from "mongoose"
 import handlebars from "express-handlebars"
 import {Server} from "socket.io"
+import cookieParser from "cookie-parser"
 import session from "express-session"
 import FileStore  from "session-file-store"
 import MongoStore from "connect-mongo"
@@ -10,6 +11,7 @@ import passport from "passport"
 import productRouter from "./router/product.routes.js"
 import cartRouter from "./router/carts.routes.js"
 import viewsRouter from "./router/views.routes.js"
+import cookiesRouter from "./router/cookies.routes.js"
 import sessionsRouter from "./router/sessions.routes.js"
 
 import { __dirname } from "./utils.js"
@@ -24,6 +26,8 @@ const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(cookieParser('secretKeyAbc123')) 
+
 
 //Instancia para almacenamiento de sesiones en Archivo
 const fileStorage = FileStore(session)

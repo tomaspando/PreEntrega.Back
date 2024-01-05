@@ -27,6 +27,16 @@ const auth = (req, res, next) => {
     }
 }
 
+// Este mid de autorización nos permite comenzar a manejar el tema de roles, es decir,
+// niveles de permisos de usuario
+const authorization = role => {
+    return async (req, res, next) => {
+        if (!req.user) return res.status(401).send({ status: 'ERR', data: 'No autenticado' });
+        if (req.user.user.role !== role) return res.status(403).send({ status: 'ERR', data: 'Sin permisos suficientes' });
+        next();
+    }
+}
+
 sessionRouter.get("/", async (req, res) => {
     try {
         
@@ -67,15 +77,22 @@ sessionRouter.get('/githubcallback', passport.authenticate('githubAuth', { failu
 sessionRouter.post("/login", async (req, res) => {
     try {
         const {email, pass} = req.body
-        
-        //if (user === "cperren" && pass === "abc123")
+
         //FindOne nos devuelve el primero que coincida
         const userInDb = await userModel.findOne({email: email})
 
         if(userInDb !== null && isValidPassword(userInDb, pass)){
+            //Usando Sessions:
+
             req.session.user = {username: email, admin: true}
             //res.status(200).send({status: "Ok", data: "Sesion iniciada"})
             res.redirect("/profile")
+
+            //Usando Tokens JWT:
+
+            //const access_token = generateToken({username: email, role: "user"}, "1h")
+            //res.cookie("codertoken", access_token, {maxAge: 60 * 60 *1000, httpOnly: true})
+            //res.status(200).send({status: "OK", data: {access: "authorized", token: access_token}} )
         }
     } catch (error) {
         res.status(401).send({status:"Error", data: "Datos no válidos"})

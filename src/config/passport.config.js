@@ -16,6 +16,7 @@
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import GithubStrategy from 'passport-github2'
+import jwt from 'passport-jwt'
 import userModel from '../dao/models/user.model.js'
 import { createHash, isValidPassword } from '../utils.js'
 
@@ -23,10 +24,10 @@ const initPassport = () => {
     // Función utilizada por la estrategia registerAuth
     const verifyRegistration = async (req, username, password, done) => {
         try {
-            const { first_name, last_name, email } = req.body
+            const { first_name, last_name, email, gender } = req.body
 
-            if (!first_name || !last_name || !email) {
-                return done('Se requiere first_name, last_name y email en el body', false)
+            if (!first_name || !last_name || !email || !gender) {
+                return done('Se requiere first_name, last_name, email y gender en el body', false)
             }
 
             const user = await userModel.findOne({ email: username })
@@ -39,6 +40,7 @@ const initPassport = () => {
                 first_name,
                 last_name,
                 email,
+                gender,
                 password: createHash(password)
             }
 
@@ -82,6 +84,7 @@ const initPassport = () => {
                     first_name: name_parts[0],
                     last_name: name_parts[1],
                     email: profile._json.email,
+                    gender: 'NA',
                     password: ' '
                 }
     
@@ -95,28 +98,58 @@ const initPassport = () => {
             return done(`Error passport Github: ${err.message}`)
         }
     }
+
+    /**
+     * Si passport pudo extraer correctamente el token, devuelve el payload 
+     * (datos útiles contenidos en él), sino devuelve el error correspondiente
+     */
+    const verifyJwt = async (payload, done) => {
+        try {
+            return done (null, payload);
+        } catch (err) {
+            return done(err);
+        }
+    }
+
+    /**
+     * Passport no opera con las cookies de forma directa, por lo cual creamos
+     * una función auxiliar que extrae y retorna la cookie del token si está disponible
+     */
+    const cookieExtractor = (req) => {
+        let token = null;
+        if (req && req.cookies) token = req.cookies['codertoken'];
+        return token;
+    }
     
-    // Creamos estrategia local de autenticación para registro
+    
+    // Estrategia local de autenticación para registro
     passport.use('registerAuth', new LocalStrategy({
         passReqToCallback: true,
         usernameField: 'email',
-        passwordField: 'password'
+        passwordField: 'pass'
     }, verifyRegistration))
 
-    // Creamos estrategia local de autenticación para restauración de clave
+    // Estrategia local de autenticación para restauración de clave
     passport.use('restoreAuth', new LocalStrategy({
         passReqToCallback: true,
         usernameField: 'email',
         passwordField: 'pass'
     }, verifyRestoration))
 
-    // Creamos estrategia para autenticación externa con Github
+    // Estrategia para autenticación externa con Github
     passport.use('githubAuth', new GithubStrategy({
-        clientID: 'Iv1.c4425dfa50987b01',
-        clientSecret: '47e4782bc67721b87f23a0cb280c09596ef4c9f1',
-        callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
+        clientID: 'Iv1.0c3c12fcc83c9770',
+        clientSecret: 'ea4f406cbd6be3c160113f683ab29059a0a21072',
+        callbackURL: 'http://localhost:5000/api/sessions/githubcallback'
     }, verifyGithub))
-        
+
+    // Estrategia para autenticación con JWT
+    passport.use('jwtAuth', new jwt.Strategy({
+        jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: 'Coder55605_Key_Jwt'
+    }, verifyJwt))
+
+
     // Métodos "helpers" de passport para manejo de datos de sesión
     // Son de uso interno de passport, normalmente no tendremos necesidad de tocarlos.
     passport.serializeUser((user, done) => {
