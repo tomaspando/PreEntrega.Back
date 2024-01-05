@@ -78,6 +78,8 @@ const initPassport = () => {
         try {
             const user = await userModel.findOne({ email: profile._json.email })
 
+            console.log(profile)
+
             if (!user) {
                 const name_parts = profile._json.name.split(' ')
                 const newUser = {
@@ -138,9 +140,9 @@ const initPassport = () => {
 
     // Estrategia para autenticación externa con Github
     passport.use('githubAuth', new GithubStrategy({
-        clientID: 'Iv1.0c3c12fcc83c9770',
-        clientSecret: 'ea4f406cbd6be3c160113f683ab29059a0a21072',
-        callbackURL: 'http://localhost:5000/api/sessions/githubcallback'
+        clientID: 'Iv1.c4425dfa50987b01',
+        clientSecret: '47e4782bc67721b87f23a0cb280c09596ef4c9f1',
+        callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
     }, verifyGithub))
 
     // Estrategia para autenticación con JWT
