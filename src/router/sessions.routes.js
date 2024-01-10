@@ -73,6 +73,22 @@ sessionRouter.get('/githubcallback', passport.authenticate('githubAuth', { failu
     res.redirect('/profile')
 })
 
+sessionRouter.get("/current", (req, res) => {
+
+    if (req.user) {
+    
+    const user = req.user
+    
+    res.status(200).send({ message: "Inicio de sesión exitoso", user })
+    
+    } else {
+    
+    res.redirect("/login");
+    
+    }
+    
+    })
+
 
 sessionRouter.post("/login", async (req, res) => {
     try {
