@@ -19,6 +19,7 @@ import GithubStrategy from 'passport-github2'
 import jwt from 'passport-jwt'
 import userModel from '../dao/models/user.model.js'
 import { createHash, isValidPassword } from '../utils.js'
+import config from '../config.js'
 
 const initPassport = () => {
     // Función utilizada por la estrategia registerAuth
@@ -140,9 +141,9 @@ const initPassport = () => {
 
     // Estrategia para autenticación externa con Github
     passport.use('githubAuth', new GithubStrategy({
-        clientID: 'Iv1.c4425dfa50987b01',
-        clientSecret: '47e4782bc67721b87f23a0cb280c09596ef4c9f1',
-        callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
+        clientID: config.GITHUB_CLIENT_ID,
+        clientSecret: config.GITHUB_CLIENT_SECRET,
+        callbackURL: config.GITHUB_CALLBACK_URL
     }, verifyGithub))
 
     // Estrategia para autenticación con JWT

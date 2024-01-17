@@ -16,10 +16,10 @@ import sessionsRouter from "./router/sessions.routes.js"
 
 import { __dirname } from "./utils.js"
 import chatModel from "./dao/models/messages.model.js"
+import config from "./config.js"
 
 const app = express()
-const PORT = 8080
-const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.net/ecommerce"
+//const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.net/ecommerce"
 
 
 
@@ -33,7 +33,7 @@ app.use(cookieParser('secretKeyAbc123'))
 const fileStorage = FileStore(session)
 app.use(session({
     //store: new fileStorage({path:"./sessions", ttl: 60, retries: 0}),
-    store: MongoStore.create({mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 60, clearInterval: 5000}),//Datos de sesion a MongoDB; TTL: Tiempo de vida de la sesion en segundos.
+    store: MongoStore.create({mongoUrl: config.MONGOOSE_URL, mongoOptions: {}, ttl: 60, clearInterval: 5000}),//Datos de sesion a MongoDB; TTL: Tiempo de vida de la sesion en segundos.
     secret: "abd123",
     resave: false,
     saveUninitialized: false
@@ -53,7 +53,7 @@ app.use("/", viewsRouter)
 app.use("/static", express.static(`${__dirname}/public`))
 
 try {
-    await mongoose.connect(MONGOOSE_URL);    
+    await mongoose.connect(config.MONGOOSE_URL);    
 
     mongoose.connection.on("connected", () => {
 
@@ -66,7 +66,7 @@ try {
         
         });
 
-    const httpServer = app.listen(PORT, () => {
+    const httpServer = app.listen(config.PORT, () => {
         console.log("Servidor activo y conectado a BBDD")
     })
 
