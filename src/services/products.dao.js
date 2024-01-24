@@ -1,22 +1,9 @@
-import productModel from "./models/product.model.js"
+import productModel from "../dao/models/product.model.js"
 
-class ProductManager {
+class ProductService {
     constructor() {
-    }
 
-    /* readProducts = async () => {
-        let products = await fs.readFile(this.path, "utf-8")
-        return JSON.parse(products)
     }
-
-    writeProducts = async (product) => {
-        await fs.writeFile(this.path, JSON.stringify(product))
-    }
-
-    exist = async id => {
-        let products = await this.readProducts()
-        return products.find( prod => prod.id === id)
-    } */
 
     addProducts = async (product) => {
         try {
@@ -35,7 +22,7 @@ class ProductManager {
             ]) */
 
 /*             return process
- */            const products = await productModel.find({}).lean()
+ */         const products = await productModel.find({}).lean()
             return products 
 
             /* const process = await productModel.paginate(
@@ -89,7 +76,7 @@ class ProductManager {
             return error.message
         }
     }
+
 }
 
-
-export default ProductManager
+export default ProductService;

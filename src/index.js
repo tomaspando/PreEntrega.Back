@@ -17,6 +17,7 @@ import sessionsRouter from "./router/sessions.routes.js"
 import { __dirname } from "./utils.js"
 import chatModel from "./dao/models/messages.model.js"
 import config from "./config.js"
+//import MongoSingleton from "./services/mongo.singleton.js"
 
 const app = express()
 //const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.net/ecommerce"
@@ -53,7 +54,8 @@ app.use("/", viewsRouter)
 app.use("/static", express.static(`${__dirname}/public`))
 
 try {
-    await mongoose.connect(config.MONGOOSE_URL);    
+    //await mongoose.connect(config.MONGOOSE_URL); 
+    //MongoSingleton.getInstance()   
 
     mongoose.connection.on("connected", () => {
 

@@ -1,7 +1,7 @@
 import {Router} from "express"
 import { createHash, isValidPassword, generateToken } from "../utils.js"
 import userModel from "../dao/models/user.model.js"
-import  UserManager  from "../dao/user.controller.mdb.js"
+import  UserManager  from "../controllers/user.controller.mdb.js"
 import passport from "passport"
 import initPassport from "../config/passport.config.js"
 
