@@ -38,8 +38,34 @@ productRouter.get("/:id", async (req,res) => {
 
 productRouter.post("/", async (req, res) => {
     try {
-        let newProduct = req.body
-        res.status(200).send({status: "Ok", data: await product.addProducts(newProduct)()})
+        //let newProduct = req.body
+        //res.status(200).send({status: "Ok", data: await product.addProducts(newProduct)()})
+
+        const { title, description, price, code, stock } = req.body;
+
+        if (!title || !price || !code || !stock) {
+            return res
+                .status(400)
+                .send({ status: "ERR", data: "Faltan campos obligatorios" });
+        }
+
+        const newContent = {
+            title,
+            description,
+            price,
+            thumbnail: req.file.filename,
+            code,
+            stock,
+        };
+
+        const normalizedProduct = new ProductDTO(newContent);
+        const result = await product.addProducts(normalizedProduct);
+
+        // Si deseamos emitir algún evento de socket.io, primero necesitamos
+        // obtener el objeto que seteamos en app.js y luego hacer un emit()
+        const socketServer = req.app.get("socketServer");
+
+        res.status(200).send({ status: "OK", data: result });
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
     }

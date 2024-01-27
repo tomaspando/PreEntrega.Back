@@ -2,6 +2,14 @@ import ProductService from "../services/products.dao.js"
 
 const service = new ProductService()
 
+class ProductDTO {
+    constructor(product) {
+        this.product = product 
+        //if(this.product.hasOwnProperty("name")) this.product.title = this.product.name 
+        this.product.title = this.product.title.toUpperCase()
+    }
+}
+
 class ProductManager {
     constructor() {
     }
@@ -22,7 +30,8 @@ class ProductManager {
 
     addProducts = async (product) => {
         try {
-            await service.addProducts(product)
+            const normalizedProduct = new ProductDTO(product)
+            await service.addProducts(normalizedProduct)
             return "Producto agregado"
         } catch (error) {
             return error.message 

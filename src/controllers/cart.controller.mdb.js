@@ -2,10 +2,9 @@ import ProductManager from "./product.controller.mdb.js"
 import cartModel from "../dao/models/carts.model.js"
 import productModel from "../dao/models/product.model.js"
 import CartService from "../services/carts.dao.js"
-import factoryCartService from "../services/dao.factory.js"
 
 const allProducts = new ProductManager
-const service = new factoryCartService
+const service = new CartService
 
 
 class CartManager {

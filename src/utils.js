@@ -2,6 +2,39 @@ import * as url from 'url'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import passport from 'passport'
+import config from './config.js'
+import nodemailer from "nodemailer" 
+
+const mailerService = nodemailer.createTransport({
+    service:"gmail",
+    port: 587,
+    auth: {
+        user: config.GOOGLE_APP_EMAIL,
+        pass:config.GOOGLE_APP_PASS
+    }
+})
+
+export const sendConfirmation = () => {
+    return async(req, res, next) => {
+        try {
+            const subject = "CODERStore confirmación registro";
+            const html = `
+                <h1>CODERStore confirmación registro</h1>
+                <p>Muchas gracias por registrarte ${req.user.first_name} ${req.user.last_name}! </p>
+            `;
+
+            await mailerService.sendMail({
+                from: config.GOOGLE_APP_EMAIL,
+                to: req.user.email,
+                subject: subject,
+                html: html 
+            })
+            next()
+        } catch (error) {
+            res.status(500).send({status: "Error", data: error.message})
+        }
+    }
+}
 
 // Este private key es para cifrar el token
 const PRIVATE_KEY = 'Coder55605_Key_Jwt'

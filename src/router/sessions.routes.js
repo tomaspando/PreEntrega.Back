@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { createHash, isValidPassword, generateToken } from "../utils.js"
+import { createHash, isValidPassword, generateToken, sendConfirmation } from "../utils.js"
 import userModel from "../dao/models/user.model.js"
 import  UserManager  from "../controllers/user.controller.mdb.js"
 import passport from "passport"
@@ -115,9 +115,9 @@ sessionRouter.post("/login", async (req, res) => {
     }
 })
 
-sessionRouter.post('/register', passport.authenticate('registerAuth', { failureRedirect: '/api/sessions/failregister' }), async (req, res) => {
+sessionRouter.post('/register', passport.authenticate('registerAuth', { failureRedirect: '/api/sessions/failregister' }), sendConfirmation(), async (req, res) => {
     try {
-        res.status(200).send({ status: 'OK', data: 'Usuario registrado' })
+        res.status(200).send({ status: 'OK', data: 'Usuario registrado, por favor revise su casilla de correo' })
     } catch (err) {
         res.status(500).send({ status: 'ERR', data: err.message })
     }
