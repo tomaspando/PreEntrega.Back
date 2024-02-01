@@ -1,5 +1,8 @@
 import { Router } from "express";
 import ProductManager from "../controllers/product.controller.mdb.js"
+import CustomError from '../services/error.custom.class.js'
+import errorsDictionary from '../services/error.dictionary.js'
+
 
 const productRouter = Router()
 const product = new ProductManager
@@ -33,6 +36,7 @@ productRouter.get("/:id", async (req,res) => {
         res.status(200).send({status: "Ok", data: await product.getProductsById(id)()})
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
     }
 })
 
@@ -44,9 +48,7 @@ productRouter.post("/", async (req, res) => {
         const { title, description, price, code, stock } = req.body;
 
         if (!title || !price || !code || !stock) {
-            return res
-                .status(400)
-                .send({ status: "ERR", data: "Faltan campos obligatorios" });
+            throw new CustomError(errorsDictionary.FEW_PARAMETERS)
         }
 
         const newContent = {
@@ -67,6 +69,8 @@ productRouter.post("/", async (req, res) => {
 
         res.status(200).send({ status: "OK", data: result });
     } catch (error) {
+
+
         res.status(500).send({status: "ERROR", data: error.message})
     }
 } )
@@ -78,6 +82,7 @@ productRouter.put("/:id", async (req,res) => {
         res.status(200).send({status: "Ok", data: await product.updateProducts(id, updateProduct)()})
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
     }
 })
 
@@ -85,6 +90,16 @@ productRouter.delete("/:id", async (req,res) => {
     try {
         let id = req.params.id
         res.status(200).send({status: "Ok", data: await product.product.deleteProducts(id)()})
+    } catch (error) {
+        res.status(500).send({status: "ERROR", data: error.message})
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
+    }
+})
+
+productRouter.get("/mockingproducts", async (req,res) => {
+    try {
+        const products = await product.generateMockProducts()
+        res.status(200).send({status: "Ok", data: products})
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
     }

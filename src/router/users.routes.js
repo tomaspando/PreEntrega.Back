@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import { UserController } from '../controllers/user.controller.mdb.js'
+import CustomError from '../services/error.custom.class.js'
+import errorsDictionary from '../services/error.dictionary.js'
 
 const router = Router()
 const controller = new UserController()
@@ -24,5 +26,7 @@ router.get('/paginated', async (req, res) => {
         res.status(500).send({ status: 'ERR', data: err.message })
     }
 })
+
+
 
 export default router

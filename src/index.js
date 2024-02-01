@@ -53,6 +53,16 @@ app.use("/", viewsRouter)
 
 app.use("/static", express.static(`${__dirname}/public`))
 
+app.use((error, req,res,next) => {
+    const code = error.code || 500;
+    res.status(code).send({status: "Error", data: error.message})
+
+})
+
+app.all("*", (req,res, next) => {
+    res.status(404).send({status: "Error", data: "Pagina no encontrada"})
+})
+
 try {
     //await mongoose.connect(config.MONGOOSE_URL); 
     MongoSingleton.getInstance()   

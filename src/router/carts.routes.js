@@ -26,6 +26,7 @@ cartRouter.get ("/:cid", async (req,res) => {
         res.status(200).send({status: "Ok", data: await carts.getCartById(id)})
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
     }
 })
 
@@ -36,6 +37,7 @@ cartRouter.post("/:cid/products/:pid" , async (req, res) => {
         res.status(200).send({status: "Ok", data: await carts.addProductInCart(cartId, productId)})
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
     }
 })
 
@@ -46,6 +48,7 @@ cartRouter.delete("/:cid/products/:pid", async (req,res) => {
         res.status(200).send({status: "Ok", data: await carts.deleteProductInCart(cartId, productId)})
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
     }
 })
 
@@ -56,6 +59,7 @@ cartRouter.put("/:cid", async (req,res) => {
         res.status(200).send({status: "Ok", data: await carts.updateCart(cartId, updatedProducts)}) 
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
     }
     //Aca no tengo idea a que se refiere la consigna con "Un arrgelo de productos con el formato especificado arriba"
 
@@ -78,6 +82,7 @@ cartRouter.put("/:cid/products/:pid", async (req, res) => {
     } catch (error) {
     
         res.status(500).send({ status: 'Error', message: 'Error al actualizar la cantidad del producto en el carrito.' });
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
     
     }
     
@@ -89,6 +94,7 @@ cartRouter.delete("/:cid", async (req,res) => {
         res.status(200).send({status: "Ok", data: await carts.deleteCart(id)})        
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
+        throw new CustomError(errorsDictionary.ID_NOT_FOUND)
     }
 
 })
@@ -109,6 +115,7 @@ cartRouter.delete("/:cid/products/:pid" , async (req,res) => {
     } catch (error) {
 
     res.status(500).send({ status: 'Error', message: 'Error al eliminar el producto del carrito.' });
+    throw new CustomError(errorsDictionary.ID_NOT_FOUND)
 
     }
 })

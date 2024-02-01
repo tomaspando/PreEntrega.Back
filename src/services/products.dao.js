@@ -1,4 +1,5 @@
 import productModel from "../dao/models/product.model.js"
+import {faker} from "@faker-js/faker"
 
 class ProductService {
     constructor() {
@@ -75,6 +76,25 @@ class ProductService {
         } catch (error) {
             return error.message
         }
+    }
+
+    generateMockProducts = async () => {
+        const mockProducts = []
+
+        for(let i = 0;  i < 100; i++ ) {
+            const product = {
+                _id: faker.database.mongodbObjectId(),
+                title: faker.commerce.productName(),
+                description: faker.commerce.productAdjective(),
+                price: faker.commerce.price(),
+                thumbnail: faker.image.avatar() ,
+                code: faker.number.int(15) +1,
+                stock: faker.datatype.number()
+            }
+            mockProducts.push(product)
+        }
+
+        return mockProducts
     }
 
 }

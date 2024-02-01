@@ -83,6 +83,14 @@ class ProductManager {
             return error.message
         }
     }
+
+    generateMockProducts = async () => {
+        try {
+            return await service.generateMockProducts()
+        } catch (error) {
+            return error.message
+        }
+    }
 }
 
 
