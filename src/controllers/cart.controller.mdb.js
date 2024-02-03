@@ -52,6 +52,14 @@ class CartManager {
         }
     }
 
+    processPurchase = async (cartId) => {
+        try {
+            
+        } catch (error) {
+            return error.message
+        }
+    }
+
     
 }
 

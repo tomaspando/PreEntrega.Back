@@ -2,6 +2,7 @@ import { Router } from "express";
 import ProductManager from "../controllers/product.controller.mdb.js"
 import CustomError from '../services/error.custom.class.js'
 import errorsDictionary from '../services/error.dictionary.js'
+import handlePolicies from "../config/policies.auth.js";
 
 
 const productRouter = Router()
@@ -30,7 +31,7 @@ productRouter.get("/", async (req,res) => {
     
 })
 
-productRouter.get("/:id", async (req,res) => {
+productRouter.get("/one/:id", async (req,res) => {
     try {
         let id = req.params.id
         res.status(200).send({status: "Ok", data: await product.getProductsById(id)()})
@@ -40,7 +41,7 @@ productRouter.get("/:id", async (req,res) => {
     }
 })
 
-productRouter.post("/", async (req, res) => {
+productRouter.post("/", handlePolicies(["admin"]), async (req, res) => {
     try {
         //let newProduct = req.body
         //res.status(200).send({status: "Ok", data: await product.addProducts(newProduct)()})
@@ -75,7 +76,7 @@ productRouter.post("/", async (req, res) => {
     }
 } )
 
-productRouter.put("/:id", async (req,res) => {
+productRouter.put("/:id", handlePolicies(["admin"]), async (req,res) => {
     try {
         let id = req.params.id
         let updateProduct = req.body 
@@ -86,7 +87,7 @@ productRouter.put("/:id", async (req,res) => {
     }
 })
 
-productRouter.delete("/:id", async (req,res) => {
+productRouter.delete("/:id", handlePolicies(["admin"]), async (req,res) => {
     try {
         let id = req.params.id
         res.status(200).send({status: "Ok", data: await product.product.deleteProducts(id)()})

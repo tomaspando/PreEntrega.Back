@@ -77,9 +77,9 @@ sessionRouter.get("/current", (req, res) => {
 
     if (req.user) {
     
-    const user = req.user
+    const {_id, password, ...userSafe} = req.user
     
-    res.status(200).send({ message: "Inicio de sesión exitoso", user })
+    res.status(200).send({ message: "Inicio de sesión exitoso", data: userSafe })
     
     } else {
     
@@ -87,7 +87,7 @@ sessionRouter.get("/current", (req, res) => {
     
     }
     
-    })
+})
 
 
 sessionRouter.post("/login", async (req, res) => {
