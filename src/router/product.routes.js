@@ -34,7 +34,7 @@ productRouter.get("/", async (req,res) => {
 productRouter.get("/one/:id", async (req,res) => {
     try {
         let id = req.params.id
-        res.status(200).send({status: "Ok", data: await product.getProductsById(id)()})
+        res.status(200).send({status: "Ok", data: await product.getProductsById(id)})
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
         throw new CustomError(errorsDictionary.ID_NOT_FOUND)
