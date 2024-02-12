@@ -18,6 +18,9 @@ import { __dirname } from "./utils.js"
 import chatModel from "./dao/models/messages.model.js"
 import config from "./config.js"
 import MongoSingleton from "./services/mongo.singleton.js"
+import addLogger from "./services/winston.logger.js"
+import cluster from "cluster"
+import os from "os"
 
 const app = express()
 //const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.net/ecommerce"
@@ -46,6 +49,7 @@ app.engine("handlebars", handlebars.engine())
 app.set("views", `${__dirname}/views`)
 app.set("view engine", "handlebars")
 
+app.use(addLogger)
 app.use("/api/products", productRouter)
 app.use("/api/carts", cartRouter)
 app.use("/api/sessions", sessionsRouter)

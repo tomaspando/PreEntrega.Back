@@ -3,6 +3,7 @@ import { UserController } from '../controllers/user.controller.mdb.js'
 import CustomError from '../services/error.custom.class.js'
 import errorsDictionary from '../services/error.dictionary.js'
 
+
 const router = Router()
 const controller = new UserController()
 

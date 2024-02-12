@@ -4,6 +4,7 @@ import userModel from "../dao/models/user.model.js"
 import  UserManager  from "../controllers/user.controller.mdb.js"
 import passport from "passport"
 import initPassport from "../config/passport.config.js"
+import handlePolicies from "../config/policies.auth.js"
 
 //Inicializamos instancia de estrategia
 initPassport()
@@ -73,7 +74,7 @@ sessionRouter.get('/githubcallback', passport.authenticate('githubAuth', { failu
     res.redirect('/profile')
 })
 
-sessionRouter.get("/current", (req, res) => {
+sessionRouter.get("/current", handlePolicies(['admin']), (req, res) => {
 
     if (req.user) {
     

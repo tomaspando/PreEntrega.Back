@@ -49,7 +49,7 @@ class ProductManager {
 
     getProductsById = async (id) => {
         try {
-            const process = await service.getProducts(id)
+            const process = await service.getProductsById(id)
             return process
         } catch (error) {
             return error.message
