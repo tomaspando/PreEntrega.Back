@@ -1,0 +1,53 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    border: 1px solid;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    row-gap: 2rem;
+}
+
+.card {
+    width: 300px;
+    border: 1px solid;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.card-img {
+    width: 70%;
+    object-fit: cover;
+}
+
+.card-desc {
+    font-size: 1.2rem;
+}
+
+.card-price {
+    font-size: 1.6rem;
+}
+
+.btn-add {
+    padding: 0.7rem;
+    font-size: 0,8rem;
+    border-radius: 12px;
+}
