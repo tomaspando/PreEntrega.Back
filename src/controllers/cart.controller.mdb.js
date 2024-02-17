@@ -54,7 +54,12 @@ class CartManager {
 
     processPurchase = async (cartId) => {
         try {
-            
+            const cartData = await service.getCartByIdService(cartId)
+
+            cartData.products.forEach(product => {
+                console.log(product)
+                console.log(product.stock)
+            })
         } catch (error) {
             return error.message
         }

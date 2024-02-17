@@ -35,7 +35,9 @@ class CartService {
     getCartByIdService = async (id) => {
         try {
             const cart = await cartModel.findById(id)
-            return cart === null ? "Carrito no encontrado" : cart
+            return cart === null ? "Carrito no encontrado" : cart 
+
+/*             return await cartModel.findById(id).populate({path: "products.pid", model: productModel}) */
         } catch (error) {
             error.message
         }
