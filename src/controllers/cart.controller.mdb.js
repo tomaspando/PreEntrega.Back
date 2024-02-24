@@ -98,7 +98,7 @@ class CartManager {
                         total += stock * price;
                     }
                     
-                    await productService.updateProduct(pid, { stock: newStock });
+                    await productService.updateProducts(pid, { stock: newStock });
                     cartModified = true;
                 }
             }
