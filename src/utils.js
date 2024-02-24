@@ -1,78 +1,98 @@
-import * as url from 'url'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import passport from 'passport'
-import config from './config.js'
-import nodemailer from "nodemailer" 
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
+import CustomError from "./services/error.custom.class.js";
+import errorsDictionary from "./services/error.dictionary.js";
+
+import config from './config.js';
 
 const mailerService = nodemailer.createTransport({
-    service:"gmail",
+    service: 'gmail',
     port: 587,
     auth: {
         user: config.GOOGLE_APP_EMAIL,
-        pass:config.GOOGLE_APP_PASS
+        pass: config.GOOGLE_APP_PASS
     }
-})
+});
 
-export const sendConfirmation = () => {
-    return async(req, res, next) => {
+/**
+ * Este es el middleware que inyectaremos en cualquier endpoint que necesite notificar
+ * @param {String} type mail o sms
+ * @param {String} msg el mensaje a enviar
+ */
+export const sendConfirmation = (type, msg) => {
+    return async (req, res, next) => {
         try {
-            const subject = "CODERStore confirmación registro";
-            const html = `
-                <h1>CODERStore confirmación registro</h1>
-                <p>Muchas gracias por registrarte ${req.user.first_name} ${req.user.last_name}! </p>
-            `;
+            let content = {};
 
-            await mailerService.sendMail({
-                from: config.GOOGLE_APP_EMAIL,
-                to: req.user.email,
-                subject: subject,
-                html: html 
-            })
-            next()
-        } catch (error) {
-            res.status(500).send({status: "Error", data: error.message})
+            switch (msg) {
+                case 'register':
+                    content.subject = 'CODERStore confirmación registro';
+                    content.html = `<h1>CODERStore confirmación registro</h1><p>Muchas gracias por registrarte ${req.user.first_name} ${req.user.last_name}!, te hemos dado de alta en nuestro sistema con el email ${req.user.email}`;
+                    break;
+                
+                default:
+            }
+
+            switch (type) {
+                case 'email':
+                    // Enviamos utilizando NodeMailer
+                    await mailerService.sendMail({
+                        from: config.GOOGLE_APP_EMAIL,
+                        to: req.user.email,
+                        subject: content.subject,
+                        html: content.html
+                    });
+    
+                    // Enviamos utilizando Resend
+                    /* const resendService = new Resend(config.RESEND_API_KEY);
+                    await resendService.emails.send({
+                        from: config.RESEND_API_EMAIL,
+                        to: req.user.email,
+                        subject: content.subject,
+                        html: content.html
+                    }); */
+
+                    break;
+                
+                case 'sms':
+                    // Envío utilizando Twilio
+                    /* const twilioClient = twilio(config.TWILIO_ACCOUNT_SID, config.TWILIO_AUTH_TOKEN);
+                    const sendSMS = await twilioClient.messages.create({
+                        body: content.html,
+                        from: config.TWILIO_VIRTUAL_NUMBER,
+                        to: config.MAIN_SMS_NUMBER
+                    }); */
+                    break;
+                
+                default:
+            }
+
+            next();
+        } catch (err) {
+            res.status(500).send({ status: 'ERR', data: err.message })
         }
     }
 }
 
-// Este private key es para cifrar el token
-const PRIVATE_KEY = 'Coder55605_Key_Jwt'
+export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-export const __filename = url.fileURLToPath(import.meta.url)
+export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password);
 
-export const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+export const generateToken = (payload, duration) => jwt.sign(payload, config.SECRET_KEY, { algorithm: 'HS256', expiresIn: duration });
 
-export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-
-export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password)
-
-export const generateToken = (payload, duration) => jwt.sign(payload, PRIVATE_KEY, { expiresIn: duration })
-
-export const authToken = (req, res, next) => {
-    const headerToken = req.headers.authorization ? req.headers.authorization.split(' ')[1]: undefined;
-    const cookieToken = req.cookies && req.cookies['codertoken'] ? req.cookies['codertoken']: undefined;
-    const queryToken = req.query.access_token ? req.query.access_token: undefined;
-    const receivedToken = headerToken || cookieToken || queryToken
-    
-    if (!receivedToken) return res.redirect('/login')
-
-    jwt.verify(receivedToken, PRIVATE_KEY, (err, credentials) => {
-        if (err) return res.status(403).send({ status: 'ERR', data: 'No autorizado' })
-        // Si el token verifica ok, pasamos los datos del payload a un objeto req.user
-        req.user = credentials
-        next()
-    })
+export const catcher = (fn) => {
+    return (req, res, next) => {
+        fn(req, res).catch(err => next(err));
+    };
 }
 
-// Rutina de intercepción de errores para passport
-export const passportCall = (strategy, options) => {
+export const requiredFieldsInBody = (fields, moreInfo) => {
     return async (req, res, next) => {
-        passport.authenticate(strategy, options, (err, user, info) => {
-            if (err) return next(err);
-            if (!user) return res.status(401).send({ status: 'ERR', data: info.messages ? info.messages: info.toString() });
-            req.user = user;
-            next();
-        })(req, res, next);
+        if (!fields.every(field => Object.keys(req.body).includes(field))) {
+            return next(new CustomError({ ...errorsDictionary.FEW_PARAMETERS, moreInfo: moreInfo }));
+        }
+
+        return next();
     }
 }

@@ -7,14 +7,16 @@ import session from "express-session"
 import FileStore  from "session-file-store"
 import MongoStore from "connect-mongo"
 import passport from "passport"
+import cors from "cors"
 
 import productRouter from "./router/product.routes.js"
 import cartRouter from "./router/carts.routes.js"
 import viewsRouter from "./router/views.routes.js"
 import cookiesRouter from "./router/cookies.routes.js"
 import sessionsRouter from "./router/sessions.routes.js"
+import errorsDictionary from './services/error.dictionary.js';
 
-import { __dirname } from "./utils.js"
+
 import chatModel from "./dao/models/messages.model.js"
 import config from "./config.js"
 import MongoSingleton from "./services/mongo.singleton.js"
@@ -33,7 +35,11 @@ app.use((req,res,next) => {
 })
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(cors({origin: "*", methods: "GET, POST, PUT, PATCH, DELETE"}))
 app.use(cookieParser('secretKeyAbc123')) 
+/* app.all('*', (req, res, next)=>{
+    res.status(404).send({ status: 'ERR', data: errorsDictionary.PAGE_NOT_FOUND.message });
+}); */ //Si uso esto la app deja de funcionar, no se por qué. 
 
 
 //Instancia para almacenamiento de sesiones en Archivo
@@ -49,7 +55,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.engine("handlebars", handlebars.engine())
-app.set("views", `${__dirname}/views`)
+app.set("views", `${config.__DIRNAME}/views`)
 app.set("view engine", "handlebars")
 
 app.use(addLogger)
@@ -58,7 +64,7 @@ app.use("/api/carts", cartRouter)
 app.use("/api/sessions", sessionsRouter)
 app.use("/", viewsRouter)
 
-app.use("/static", express.static(`${__dirname}/public`))
+app.use("/static", express.static(`${config.__DIRNAME}/public`))
 
 app.use((error, req,res,next) => {
     const code = error.code || 500;

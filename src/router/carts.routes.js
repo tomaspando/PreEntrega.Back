@@ -3,6 +3,10 @@ import CartManager from "../controllers/cart.controller.mdb.js"
 
 const cartRouter = Router()
 const carts = new CartManager
+import handlePolicies from "../config/policies.auth.js";
+import CustomError from "../services/error.custom.class.js";
+import errorsDictionary from "../services/error.dictionary.js";
+import { catcher, requiredFieldsInBody } from "../utils.js";
 
 cartRouter.post("/", async (req,res) => {
     try {
@@ -38,6 +42,10 @@ cartRouter.get ("/:cid/purchase", async (req,res) => {
         res.status(500).send({status: "ERROR", data: error.message})
     }
 })
+
+cartRouter.get('/tickets',  handlePolicies(['admin']), catcher(async (req, res) => {
+    res.status(200).send({ status: 'OK', data: await carts.getTickets() });
+}));
 
 cartRouter.post("/:cid/products/:pid" , async (req, res) => {
     try {
@@ -128,6 +136,25 @@ cartRouter.delete("/:cid/products/:pid" , async (req,res) => {
 
     }
 })
+
+cartRouter.patch('/:cid', requiredFieldsInBody(['pid', 'qty'], 'pid: id producto, qty: cantidad'), catcher(async (req, res) => {
+    const { pid, qty } = req.body;
+    if (qty > 0) {
+        res.status(200).send({ status: 'OK', data: await carts.updateCart(req.params.cid, pid, qty) });
+    } else {
+        throw new CustomError({ ...errorsDictionary.INVALID_PARAMETER, moreInfo: 'cantidad negativa' });
+    }
+}));
+
+cartRouter.param("cid", async (req, res, next) => {
+    const regex = new RegExp(/^[a-fA-F0-9]{24}$/);
+    
+    if (regex.test(req.params.cid)) {
+        next();
+    } else {
+      return next(new CustomError(errorsDictionary.INVALID_MONGOID_FORMAT));
+    }
+});
 
 
 
