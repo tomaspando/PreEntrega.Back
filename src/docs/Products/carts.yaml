@@ -1,0 +1,229 @@
+paths:
+  /api/carts:
+    get:
+      summary: "Retorna todos los carritos disponibles"
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+    post:
+      summary: "Agregar un Carrito"
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+  /api/carts/{id}:
+    get:
+      summary: "Obtener un carrito según su ID"
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+    put:
+      summary: "Actualiza un carrito según su ID"
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+    delete:
+      summary: "Elimina un carrito según su ID"
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+    patch:
+      summary: "Actualiza un carrito según su ID"
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+  /api/carts/{id}/purchase:
+    get:
+      summary: "Completar el proceso de compra"
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: "Agregar un producto determinado a un carrito determinado"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+        - name: pid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+    delete:
+      summary: "Eliminar un producto de un carrito determinado"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+        - name: pid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+    put:
+      summary: "Actualizar un producto de un carrito determinado"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+        - name: pid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+  /api/carts/tickets:
+    get:
+      summary: "Obtener los tickets disponibles"
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                type: objeto
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "Error general"
+
+components:
+  schemas:
+    Carts:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: "ID MongoDB"
+        products:
+          type: objectId
+          description: "ID MongoDB"
+        total:
+          type: number
+          description: "Precio total"
+
+

@@ -15,6 +15,8 @@ import viewsRouter from "./router/views.routes.js"
 import cookiesRouter from "./router/cookies.routes.js"
 import sessionsRouter from "./router/sessions.routes.js"
 import errorsDictionary from './services/error.dictionary.js';
+import swaggerJSDoc from "swagger-jsdoc"
+import swaggerUiExpress from "swagger-ui-express"
 
 
 import chatModel from "./dao/models/messages.model.js"
@@ -28,6 +30,17 @@ const app = express()
 //const MONGOOSE_URL = "mongodb+srv://tomas_pando:poker1994@coder.wds0shg.mongodb.net/ecommerce"
 
 
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Documentacion Tienda",
+            description: "Documentación sobre el proyecto final"
+        },
+    },
+    apis: ["./src/docs/**/*.yaml"],
+}
+const specs = swaggerJSDoc(swaggerOptions)
 
 app.use((req,res,next) => {
     res.setHeader("Access-Control-Allow-Origin", "*")
@@ -63,6 +76,7 @@ app.use("/api/products", productRouter)
 app.use("/api/carts", cartRouter)
 app.use("/api/sessions", sessionsRouter)
 app.use("/", viewsRouter)
+app.use("/api/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs) )
 
 app.use("/static", express.static(`${config.__DIRNAME}/public`))
 

@@ -3,6 +3,7 @@ import ProductManager from "../controllers/product.controller.mdb.js"
 import CustomError from '../services/error.custom.class.js'
 import errorsDictionary from '../services/error.dictionary.js'
 import handlePolicies from "../config/policies.auth.js";
+import { ProductDTO } from "../controllers/product.controller.mdb.js";
 
 
 const productRouter = Router()
