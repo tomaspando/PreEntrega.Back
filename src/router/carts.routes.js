@@ -38,6 +38,7 @@ cartRouter.get ("/:cid/purchase", async (req,res) => {
     try {
         let id = req.params.cid
         res.status(200).send({status: "Ok", data: await carts.processPurchase(id)})
+        
     } catch (error) {
         res.status(500).send({status: "ERROR", data: error.message})
     }
